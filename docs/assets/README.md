@@ -1,9 +1,8 @@
 # Assets
 
-Place the following files here:
-- demo.gif
-- screenshot-01.png
-- screenshot-02.png
-- screenshot-03.png
+Diagrams and screenshots referenced from the project README and `/docs`.
+
+Current files:
+- `patterns-overview.png` — single-image overview of the four patterns (referenced from the top-level README).
 
 Use optimized files (reasonable size) and keep names consistent with README links.

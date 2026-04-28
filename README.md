@@ -4,6 +4,10 @@ Small, copy-pasteable patterns for keeping AI agent systems honest in production
 
 **Status:** Active · **Stack:** TypeScript (framework-agnostic) · **License:** MIT
 
+## Overview
+
+![Patterns overview](/docs/assets/patterns-overview.png)
+
 ## Why these patterns exist
 
 Most agent failures in production aren't model failures — they're operational. A green status with the wrong outcome. A coordinator loop that hasn't fired in 4 hours and nobody noticed. A high-risk approval that sat pending overnight. A gateway that's been dead for 30 minutes while the dashboard happily reports "all OK" because nothing is checking the checker.
