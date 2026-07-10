@@ -14,7 +14,7 @@ Most "health check" implementations fail at the worst possible moment because th
 
 - Counts **consecutive** failures (not failure rate over a window). One miss is a blip; three in a row is an outage.
 - Emits an incident only the first time the threshold is crossed (dedup), and clears the dedup state on recovery.
-- Escalates via a **side channel** — e.g., direct Telegram/SMS — that does not depend on the failed component. If the gateway is dead, the alert path must not go through the gateway.
+- Escalates via a **side channel** - e.g., direct Telegram/SMS - that does not depend on the failed component. If the gateway is dead, the alert path must not go through the gateway.
 - Rate-limits side-channel alerts (default: at most one per hour) so a long outage doesn't become a notification storm.
 
 ## When to use it
@@ -25,9 +25,12 @@ Most "health check" implementations fail at the worst possible moment because th
 ## When not to use it
 
 - Checks that are themselves cheap and frequent enough that a single failure is action-worthy (e.g., user-facing latency probes).
-- Fast-moving metrics — this is a "is it alive at all" check, not an SLO tracker.
+- Fast-moving metrics - this is a "is it alive at all" check, not an SLO tracker.
 
 ## Reference
 
-- [`health-watchdog.ts`](./health-watchdog.ts) — consecutive-failure counter, dedup, side-channel escalation, rate limiting.
-- See it in production: [Mission Control · `scripts/coordinator-loop.mjs` `checkGatewayHealth`](https://github.com/leveretlogic/agent-mission-control/blob/main/scripts/coordinator-loop.mjs).
+- [`health-watchdog.ts`](./health-watchdog.ts) - consecutive-failure counter, dedup, side-channel escalation, rate limiting.
+
+## Lineage
+
+The consecutive-failure version ran in Mission Control v1's coordinator loop - which itself died silently, proving the point that [the watchdog must not live inside the thing it watches](https://github.com/leveretlogic/agent-mission-control#v1-died-twice-thats-the-interesting-part). The v2 successor is a ~40-line external probe on a separate scheduler (a cron on the agent gateway): it curls the dashboard's `/api/health`, alerts over Telegram on the first failure, dedupes via a state file that clears on recovery, and re-alerts at most every 6 h while the outage lasts. Probing every 30 min made the blip tolerance unnecessary - at that cadence, one miss is already worth a message. Keep the consecutive-failure counter when you probe frequently; drop it when the probe interval *is* your tolerance.

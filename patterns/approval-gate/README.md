@@ -12,10 +12,10 @@ Telling an agent "ask me before doing anything irreversible" sounds simple, but 
 
 ## What this pattern does
 
-- Classifies every action by risk level — and ties risk to SLA: `high` = 90 min, `medium` = 20 min, `low` = no expiry.
+- Classifies every action by risk level - and ties risk to SLA: `high` = 90 min, `medium` = 20 min, `low` = no expiry.
 - Requires double-confirmation for `high` risk **outside the operational window** (a deliberately higher bar when an operator is more likely to be tired or distracted).
 - Emits a structured event on every state change (`approval_requested`, `approval_resolved`, expiration → `incident_opened`) so the audit trail is automatic, not retrofitted.
-- Separates "request the approval" from "expire stale approvals" — the latter is a periodic job, not a side effect of reads.
+- Separates "request the approval" from "expire stale approvals" - the latter is a periodic job, not a side effect of reads.
 
 ## When to use it
 
@@ -24,10 +24,13 @@ Telling an agent "ask me before doing anything irreversible" sounds simple, but 
 
 ## When not to use it
 
-- Read-only or trivially reversible actions — the gate becomes noise.
-- Sub-second latency requirements — this assumes minutes, not milliseconds.
+- Read-only or trivially reversible actions - the gate becomes noise.
+- Sub-second latency requirements - this assumes minutes, not milliseconds.
 
 ## Reference
 
-- [`approval-gate.ts`](./approval-gate.ts) — request, resolve, expire-pending; risk-level policy; event emission.
-- See it in production: [Mission Control · `lib/approvals/service.ts`](https://github.com/leveretlogic/agent-mission-control/blob/main/lib/approvals/service.ts).
+- [`approval-gate.ts`](./approval-gate.ts) - request, resolve, expire-pending; risk-level policy; event emission.
+
+## Lineage
+
+The full risk-tiered version ran in Mission Control v1. The v2 post-mortem flagged the SLA tiers as machinery nothing depended on, and v2 ships a deliberately leaner successor: every mutation goes through a confirm step surfaced on two independent surfaces (the chat that requested it *and* a global approvals inbox, so a phone can decide what a desktop asked), every decision is audited, and a pending request is denied automatically if the requesting session disconnects. Risk tiers earn their keep when several agents with different blast radii share one queue - start without them. See [the write-safety model](https://github.com/leveretlogic/agent-mission-control#the-write-safety-model) and [approving tool calls from a phone](https://github.com/leveretlogic/agent-mission-control#approving-an-ai-agents-tool-calls-from-a-phone).
