@@ -1,0 +1,5 @@
+# macOS
+.DS_Store
+
+# Local-only Claude Code context (points at private local paths)
+CLAUDE.md
