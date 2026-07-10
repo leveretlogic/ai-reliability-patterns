@@ -52,7 +52,7 @@ export async function checkFreshness(
   const hour = hourInTimeZone(now, config.timeZone);
   const inBusinessHours = hour >= config.businessHours.startHour && hour < config.businessHours.endHour;
 
-  // Off-hours silence is not a failure mode — only escalate inside the window.
+  // Off-hours silence is not a failure mode - only escalate inside the window.
   if (!inBusinessHours || ageHours < config.incidentAfterHours) {
     if (state.incidentOpen && ageHours < config.incidentAfterHours) {
       await io.emitEvent({ type: "incident_resolved", payload: { component: "scheduler", recoveredAfterHours: Number(ageHours.toFixed(1)) } });

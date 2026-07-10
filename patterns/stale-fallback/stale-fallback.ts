@@ -2,7 +2,7 @@
 //
 // Run periodically (e.g. every coordinator cycle, or on a 1-minute cron). Moves
 // pending items past their SLA into `expired` and emits both a decision event
-// and an incident — so the ops pane sees the missed decision, not silence.
+// and an incident - so the ops pane sees the missed decision, not silence.
 
 export interface PendingItem {
   id: string;

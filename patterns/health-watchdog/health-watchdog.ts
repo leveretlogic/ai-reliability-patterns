@@ -58,7 +58,7 @@ export async function runWatchdogCycle(
     next.incidentOpenFor = config.name;
   }
 
-  // Side-channel escalation — bypasses the failing dependency, rate-limited.
+  // Side-channel escalation - bypasses the failing dependency, rate-limited.
   if (consecutive >= config.sideChannelThreshold) {
     const lastMs = state.lastSideChannelAlertAt ? new Date(state.lastSideChannelAlertAt).getTime() : 0;
     if (now.getTime() - lastMs >= config.alertCooldownMs) {

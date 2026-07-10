@@ -2,7 +2,7 @@
 //
 // Storage is intentionally abstracted behind a thin `ApprovalStore` interface so
 // you can back it with SQLite, Postgres, Redis, or an in-memory map. The same
-// goes for `EventEmitter` — wire it to whatever audit pipeline you already have.
+// goes for `EventEmitter` - wire it to whatever audit pipeline you already have.
 
 export type RiskLevel = "low" | "medium" | "high";
 
@@ -125,7 +125,7 @@ export function makeApprovalGate(deps: {
         type: "approval_resolved",
         payload: { approvalId: row.id, action: row.action, decision: "expired", reason: "SLA expired" },
       });
-      // Open an incident — an expired approval is a missed decision, not silence.
+      // Open an incident - an expired approval is a missed decision, not silence.
       deps.events.emit({
         type: "incident_opened",
         payload: { title: "Approval expired", approvalId: row.id, action: row.action, riskLevel: row.riskLevel },
