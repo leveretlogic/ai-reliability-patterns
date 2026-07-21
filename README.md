@@ -25,7 +25,21 @@ They are not a framework. Copy the file, adapt the storage layer (the snippets u
 | [Heartbeat freshness](./patterns/heartbeat-freshness) | A scheduler that's stopped firing looks identical to one that has nothing to do. Silence is ambiguous. | Cron jobs, polling loops, agent turn schedulers - anything periodic. |
 | [Stale fallback](./patterns/stale-fallback) | Pending work waits forever. An approval that sat overnight is no longer the same decision. | Any human-in-the-loop step with a meaningful "too late" boundary. |
 
-## How to use this repo
+## Quick start
+
+There is no package to install. Each pattern is a standalone TypeScript reference that you copy into an existing project and connect to your own storage and notification layers.
+
+```bash
+git clone https://github.com/leveretlogic/ai-reliability-patterns.git
+cd ai-reliability-patterns
+
+# Pick one pattern and copy its implementation into your project.
+cp patterns/approval-gate/approval-gate.ts /path/to/your-project/src/reliability/
+```
+
+Read the pattern's README before copying it. The interfaces in each implementation show what your application must provide, such as storage, event emission or a side-channel notifier. Add tests around your adapters and failure policy in the destination project.
+
+## Repository structure
 
 Each pattern is self-contained in `patterns/<name>/` with:
 
